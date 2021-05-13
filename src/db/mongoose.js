@@ -5,7 +5,8 @@ const mongoose = require('mongoose')
 mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api',{ // specify name of db here
     useNewUrlParser:true,
     useCreateIndex:true,
-    useUnifiedTopology:true // creates indexes which helps in quick data access
+    useUnifiedTopology:true, // creates indexes which helps in quick data access
+    useFindAndModify:false
 })
 
 
