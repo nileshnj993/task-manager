@@ -1,11 +1,28 @@
-const e = require('express')
+
 const express = require('express')
 require('./db/mongoose') // starts up connection to database
 const Task = require('./models/task') 
 
 const app = express()
-
 const port = process.env.PORT || 3000
+
+// app.use((req,res,next) => { // next is specific to middleware. req, res is same as before.
+//     // console.log(req.method, req.path)
+//     // next() // without this the route handler will never be called regardless of what we do in middleware
+
+//     if(req.method === 'GET'){
+//         res.send('GET requests are disabled')
+//     } else{
+//         next()
+//     }
+// })
+
+// middleware for maintenance mode - disable all requests
+// app.use((req,res,next)=>{
+//     res.status(503).send("Site is currently under maintenance. Please check later!")
+//     // no requests will be considered since next() is never
+// }) // define in separate file
+
 
 app.use(express.json()) // use this to parse any incoming json input to be used as a js object
 
@@ -22,8 +39,50 @@ app.use(userRouter)
 const taskRouter = require('./routers/task')
 app.use(taskRouter)
 
+// without middleware: new request -> run route handler
+
+// with middleware: new request -> do something using a function -> run route handler
+// we make use of the middleware to authenticate users and move forward accordingly
+
+
 
 
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
 })
+
+// const bcrypt = require('bcryptjs') // hashing sensitive info - hashing is one way - we cant decrypt hashed information
+
+// const myfunction = async () => {
+//     const password = 'Red12345!' // plain text password
+//     const hashedPassword = await bcrypt.hash(password, 8) // returns a promise, 8 is the number of hashing rounds taking place
+    
+//     console.log(password)
+//     console.log(hashedPassword)
+
+//     const isMatch = await bcrypt.compare(password, hashedPassword) // compares hash(plain text pwd) to hashed pwd stored in database to see if correct plain text pwd has been entered
+//     console.log(isMatch)
+// }
+
+// myfunction()
+
+// const jwt = require('jsonwebtoken')
+
+// const myFunction = async() => { // expiresIn indicates till when token is valid
+//     const token = jwt.sign({_id:'abc123'}, 'thisisatest', { expiresIn: '7 days'})// creates an authentication token. first parameter indicates what is the data that can be used to identify uniquely and second parameter is a secret code used to hash the authenticator to ensure integrity and authenticity
+//     console.log(token) // prints the random authentication sequence generated - sequence separated by periods, first half is the header which indicates type of authentication used etc and second half indicates our info used to create authentication string (attribute used - id in our case, and timestamp of creation time). third half shows how the signature string has been encoded.
+
+//     const data = jwt.verify(token, "thisisatest") // checks if secret code is same as what was used to generate the token. If same, we get our authentication attributes     console.log(data)
+
+// }
+
+// myFunction()
+
+// const pet = {
+//     name: "Tom"
+// }
+// pet.toJSON = function(){
+//    return {}
+// }
+
+// console.log(JSON.stringify(pet)) // in res.send, json.stringify is internally called

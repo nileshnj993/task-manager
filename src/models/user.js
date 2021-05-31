@@ -1,9 +1,9 @@
 // This file is to store structure of user class
-
 const mongoose = require('mongoose')
 const validator = require('validator')
-
-const User = mongoose.model('User', {
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const userSchema = new mongoose.Schema({ // validation and sanitization of attributes
     name:{
         type:String,
         required:true,
@@ -28,7 +28,8 @@ const User = mongoose.model('User', {
             }
         },
         trim:true,
-        lowercase:true
+        lowercase:true,
+        unique:true // only unique emails allowed
     },
     password:{ // plain text for now
         type:String,
@@ -43,8 +44,59 @@ const User = mongoose.model('User', {
                 throw new Error('Password must not include the word password')
             }
         }
-    }
+    },
+    tokens:[{
+        token: {
+            type:String,
+            required:true
+        }
+    }]
 })
+
+// methods can be accessed on instances of User model (schema)
+userSchema.methods.generateAuthToken = async function () { // need to use 'this' so no arrow function
+    const user = this
+    const token = jwt.sign({_id:user._id.toString()}, "thisisatest")
+    user.tokens = user.tokens.concat({token:token})
+    await user.save() // generating tokens and saving to db
+    return token
+}
+
+userSchema.methods.toJSON= function () {// toJSON determines what gets returned when a json object is stringified ie. whenever res.send is used
+    const user = this
+    const userObject = user.toObject()
+    delete userObject.password
+    delete userObject.tokens
+    return userObject
+}
+
+userSchema.statics.findByCredentials = async (email, password) => { // adding reusable function as part of the schema for login purposes
+    const user = await User.findOne({email}) // email == this.email
+    if(!user){
+        throw new Error('Unable to login!')
+    }
+    
+    const isMatch = await bcrypt.compare(password, user.password) // compare entered password with the password matching with the email that has been verified
+    console.log(isMatch)
+    if(!isMatch){
+        throw new Error('Unable to login!')
+    }
+    return user
+}
+
+
+// hash password before saving
+userSchema.pre('save', async function(next){ // pre indicates operation to be done just before new user is created / saved, do this
+    // next is the function that executes after saving. We can't use arrow notation as we need to use 'this'
+    const user = this // particular user document being saved
+    if(user.isModified('password')){ // ismodified takes care of update to password as well as setting new password
+        user.password = await bcrypt.hash(user.password,8)
+        // console.log('Password has been hashed successfully!')
+    }
+    next() // without this call no user will be saved coz system will think we are going to add more pre instructions
+})
+
+const User = mongoose.model('User', userSchema) // new model
 
 
 
