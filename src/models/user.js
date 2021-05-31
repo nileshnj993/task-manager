@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Task = require('./task')
+
 const userSchema = new mongoose.Schema({ // validation and sanitization of attributes
     name:{
         type:String,
@@ -62,6 +64,12 @@ userSchema.methods.generateAuthToken = async function () { // need to use 'this'
     return token
 }
 
+userSchema.virtual('tasks', {
+    ref:"Tasks", // not a column in the db, just a virtual connection for mongoose
+    localField:"_id", // name of field in user db
+    foreignField:"owner" // name of field in task db
+})
+
 userSchema.methods.toJSON= function () {// toJSON determines what gets returned when a json object is stringified ie. whenever res.send is used
     const user = this
     const userObject = user.toObject()
@@ -95,6 +103,14 @@ userSchema.pre('save', async function(next){ // pre indicates operation to be do
     }
     next() // without this call no user will be saved coz system will think we are going to add more pre instructions
 })
+
+// delete tasks when user who created them is deleted
+userSchema.pre('remove', async function(next){
+    const user = this
+    await Task.deleteMany({owner: user._id}) // delete all tasks where owner is same as user id before it is removed
+    next()
+})
+
 
 const User = mongoose.model('User', userSchema) // new model
 

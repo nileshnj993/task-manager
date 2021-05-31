@@ -11,6 +11,11 @@ const taskSchema = new mongoose.Schema({
         completed:{
             type:Boolean,
             default:false, // makes it compulsory to enter this value
+        }, 
+        owner: { // the user that created the task
+            type: mongoose.Schema.Types.ObjectId, // user id
+            required:true,
+            ref: 'User' // same name as mentioned in other model which we want to connect with
         }
 })
 
@@ -20,6 +25,6 @@ taskSchema.pre('save', async function(next){
     next()
 })
 
-const Task = mongoose.model('Tasks', taskSchema)
+const Tasks = mongoose.model('Tasks', taskSchema)
 
-module.exports = Task
+module.exports = Tasks

@@ -1,7 +1,7 @@
 
 const express = require('express')
 require('./db/mongoose') // starts up connection to database
-const Task = require('./models/task') 
+
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -50,6 +50,28 @@ app.use(taskRouter)
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
 })
+
+
+const Task = require('./models/task')
+const User = require('./models/user')
+// const main = async () => {
+//     // finding user details using task owner ID
+
+//     // const task = await Task.findById("60b4b9789c7839c7f927d4b5")
+//     // await task.populate('owner').execPopulate() // this helps us go find all the data associated with the owner attribute in another model 'User'
+//     // console.log(task.owner)
+
+//     // finding tasks a user has done based on ID
+
+//     const user = await User.findById("60b4b7e33323a1859d753279")
+//     await user.populate('tasks').execPopulate()
+//     console.log(user.tasks) // we won't create a task array on user model. We instead create a virtual connection between user and task collection
+
+// }
+
+// main()
+
+
 
 // const bcrypt = require('bcryptjs') // hashing sensitive info - hashing is one way - we cant decrypt hashed information
 
