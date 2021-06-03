@@ -2,6 +2,7 @@ const express = require('express')
 const router = new express.Router()
 const User = require('../models/user')
 const auth = require('../middleware/auth')
+const multer = require('multer')
 
 router.get('/test', (req,res)=>{
     res.send('From a new file')
@@ -136,6 +137,26 @@ router.delete("/users/me", auth, async (req,res) => { // only delete your own pr
     } catch(e){
            res.status(500).send()
     }
+})
+
+const upload = multer({
+    dest:'avatars',
+    limits:{
+        fileSize:1000000 // 10^6 ie. 1 mb - max size of file that can be uploaded
+    },
+    fileFilter(req,file, cb){ // req sent, uploaded file details, callback
+        if(!(file.originalname.endsWith('.jpg')|| file.originalname.endsWith('.jpeg') || file.originalname.endsWith('.png'))){ // not a pdf
+           return cb(new Error('Please upload an image!'))
+        }
+        cb(undefined,true)
+       
+        // cb(new Error('File must be a word document!')) // if incorrect file uploaded
+        // cb(undefined, true) // successful upload
+    }
+})
+
+router.post('/users/me/avatar', upload.single('avatar'), (req,res)=>{
+    res.send()
 })
 
 

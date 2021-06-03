@@ -53,6 +53,8 @@ const userSchema = new mongoose.Schema({ // validation and sanitization of attri
             required:true
         }
     }]
+}, {
+    timestamps:true // additional options on schema to store timestamps(created time, updated time)
 })
 
 // methods can be accessed on instances of User model (schema)
@@ -75,6 +77,8 @@ userSchema.methods.toJSON= function () {// toJSON determines what gets returned 
     const userObject = user.toObject()
     delete userObject.password
     delete userObject.tokens
+    delete userObject.createdAt
+    delete userObject.updatedAt
     return userObject
 }
 

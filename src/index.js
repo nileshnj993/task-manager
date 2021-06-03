@@ -6,6 +6,21 @@ require('./db/mongoose') // starts up connection to database
 const app = express()
 const port = process.env.PORT || 3000
 
+
+
+
+
+// const multer = require('multer') // for sending data other than json
+// const upload = multer({
+//     dest:'images' // destination to store uploads. can add other options such as pdf only, jpg only etc.
+// })
+
+// app.post('/upload', upload.single('upload'), (req,res)=>{ // multer provides middleware that helps us deal with uploading of the image. upload.singe(<name of file being uploaded>)
+//     res.send() // send 200 ok response
+//     // 'upload' tells us to look for a file named upload 
+// })
+
+
 // app.use((req,res,next) => { // next is specific to middleware. req, res is same as before.
 //     // console.log(req.method, req.path)
 //     // next() // without this the route handler will never be called regardless of what we do in middleware

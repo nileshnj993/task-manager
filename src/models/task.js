@@ -17,6 +17,8 @@ const taskSchema = new mongoose.Schema({
             required:true,
             ref: 'User' // same name as mentioned in other model which we want to connect with
         }
+},{
+    timestamps:true
 })
 
 taskSchema.pre('save', async function(next){
