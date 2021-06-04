@@ -3,6 +3,8 @@ const router = new express.Router()
 const User = require('../models/user')
 const auth = require('../middleware/auth')
 const multer = require('multer')
+const sharp = require('sharp') // used to convert images into one common format(png) and give fixed length and width dimensions
+const {sendWelcomeEmail} = require('../emails/account')
 
 router.get('/test', (req,res)=>{
     res.send('From a new file')
@@ -18,6 +20,7 @@ router.post('/users', async (req,res) => { // CREATE NEW USER - sign up
    
     try{
         await user.save() // everything that happens after this is once user is saved in db
+        sendWelcomeEmail(user.email, user.name) // send mail - no need async await as mail will eventually be sent we dont need to wait for it to be sent in order to proceed
         const token = await user.generateAuthToken()
         res.status(201).send({user,token})
     } catch(e){
@@ -140,7 +143,7 @@ router.delete("/users/me", auth, async (req,res) => { // only delete your own pr
 })
 
 const upload = multer({
-    dest:'avatars',
+    // dest:'avatars', if we dont provide destination, the data is just passed as an object by multer to be used
     limits:{
         fileSize:1000000 // 10^6 ie. 1 mb - max size of file that can be uploaded
     },
@@ -155,9 +158,39 @@ const upload = multer({
     }
 })
 
-router.post('/users/me/avatar', upload.single('avatar'), (req,res)=>{
+// const errorMiddleware = (req,res,next)=>{
+//     throw new Error('From my middleware')
+// }
+
+router.post('/users/me/avatar', auth, upload.single('avatar'), async (req,res)=>{ // multiple middleware
+    // req.user.avatar = req.file.buffer // save image as attribute of user
+    const buffer = await sharp(req.file.buffer).resize({width:250, height:250}).png().toBuffer()
+    req.user.avatar = buffer
+    await req.user.save()
+    res.send()
+}, (error,req,res,next) =>{ // extra code if post request doesn't go as planned
+    res.status(400).send({error:error.message})
+})
+// use <img src = "data:image/jpg;base64, <image in binary>" > to display image in webpage
+
+router.delete('/users/me/avatar', auth, async (req,res)=>{
+    req.user.avatar = undefined
+    await req.user.save()
     res.send()
 })
 
+router.get('/users/:id/avatar', async (req,res)=>{ // fetching profile pictures on a specific url
+    try{
+        const user = await User.findById(req.params.id)
+        if(!user || !user.avatar){ // no user or no profile pic, then trigger 404
+            throw new Error()
+        }
 
+        res.set('Content-Type', 'image/png') // setting type of response that can be expected. Usually express is smart enough to configure this by itself based on the data being sent
+        res.send(user.avatar)
+
+    } catch(e){
+        res.status(404).send()
+    }
+})
 module.exports = router

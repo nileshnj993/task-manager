@@ -52,7 +52,10 @@ const userSchema = new mongoose.Schema({ // validation and sanitization of attri
             type:String,
             required:true
         }
-    }]
+    }], 
+    avatar:{ // for profile pic 
+        type:Buffer // to store in binary format
+    }
 }, {
     timestamps:true // additional options on schema to store timestamps(created time, updated time)
 })
@@ -79,6 +82,7 @@ userSchema.methods.toJSON= function () {// toJSON determines what gets returned 
     delete userObject.tokens
     delete userObject.createdAt
     delete userObject.updatedAt
+    delete userObject.avatar
     return userObject
 }
 
