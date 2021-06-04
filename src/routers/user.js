@@ -4,7 +4,7 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 const multer = require('multer')
 const sharp = require('sharp') // used to convert images into one common format(png) and give fixed length and width dimensions
-const {sendWelcomeEmail} = require('../emails/account')
+const {sendWelcomeEmail, sendGoodbyeEmail} = require('../emails/account')
 
 router.get('/test', (req,res)=>{
     res.send('From a new file')
@@ -136,6 +136,7 @@ router.delete("/users/me", auth, async (req,res) => { // only delete your own pr
     //        res.send(user)
     //    }
         await req.user.remove() // similar to res.send(), we delete current auth user
+        sendGoodbyeEmail(req.user.email, req.user.name)
         res.send(req.user)
     } catch(e){
            res.status(500).send()

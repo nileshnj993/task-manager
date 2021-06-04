@@ -13,6 +13,15 @@ const sendWelcomeEmail = (email, name) => {
     })
 }
 
+const sendGoodbyeEmail = (email, name) =>{
+    mg.messages().send({
+        to:email,
+        from:"nileshnj993@gmail.com",
+        text:'Goodbye! It was great having you as our customer. Please provide us feedback so we can improve our services.',
+        subject:'We bid farewell..'
+    })
+}
 module.exports ={
-    sendWelcomeEmail
+    sendWelcomeEmail,
+    sendGoodbyeEmail
 } 
