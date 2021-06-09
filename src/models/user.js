@@ -63,7 +63,7 @@ const userSchema = new mongoose.Schema({ // validation and sanitization of attri
 // methods can be accessed on instances of User model (schema)
 userSchema.methods.generateAuthToken = async function () { // need to use 'this' so no arrow function
     const user = this
-    const token = jwt.sign({_id:user._id.toString()}, "thisisatest")
+    const token = jwt.sign({_id:user._id.toString()}, process.env.JWT_SECRET)
     user.tokens = user.tokens.concat({token:token})
     await user.save() // generating tokens and saving to db
     return token

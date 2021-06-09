@@ -6,7 +6,7 @@ const auth = async (req,res,next) => {
     try{
         const token = req.header('Authorization').replace('Bearer ','') // accesses jwt being sent in header
         // console.log(token)
-        const decoded = jwt.verify(token, 'thisisatest')
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findOne({_id:decoded._id, 'tokens.token': token}) // checks if user still has the token and it has not expired
     
        if(!user){

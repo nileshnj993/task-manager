@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
     "db": "/home/njeyepatch/mongodb/bin/mongod --dbpath=/home/njeyepatch/mongodb-data"
   },
   "repository": {
@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/njmit123/task-manager#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.4.4",
     "bcryptjs": "^2.4.3",
+    "env-cmd": "^10.1.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mailgun-js": "^0.22.0",
