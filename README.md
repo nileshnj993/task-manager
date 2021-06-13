@@ -17,14 +17,13 @@ This is a basic **Task Manager** API that is made using **node.js** and deployed
 2. Fetching all tasks of logged in user
 3. Updating and deleting tasks of logged in user
 
-The router and model files are available in the source code, where one can see the exact format needed to make the HTTP requests. 
+**The API can be accessed at [Task Manager API](https://task-manager-nj.herokuapp.com) and the HTTP requests can be made using [Postman](https://www.postman.com/)**
 
-##**Additional Functionality Provided**
+## **Additional Functionality Provided**
 1. Mail sent to newly registered users
 2. Authorized access to personal tasks
 3. Encrypted storing of passwords
 4. Ability to add profile picture for your user
 5. Automatically delete all tasks associated with a user, if the user is deleted
 
-The API can be accessed at [Task Manager API](https://task-manager-nj.herokuapp.com) and the HTTP requests can be made using [Postman](https://www.postman.com/)
-
+_The router and model files are available in the source code, where one can see the exact format needed to make the HTTP requests._ 
