@@ -1,5 +1,5 @@
 # task-manager
-This is a basic **Task Manager** API that is made using **node.js** and deployed on **Heroku**. **Mongodb** has been used to store the User and Task related data. **Jestjs** was also used to verify the functioning of the API for various test cases.
+This is a basic **Task Manager** API that is made using **node.js** and deployed on **Heroku**. **Mongodb** has been used to store the User and Task related data. **Jest** was also used to verify the functioning of the API for various test cases.
 
 ## **Basic Functionality**
 
