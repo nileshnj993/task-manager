@@ -6,7 +6,7 @@ This is a basic **Task Manager** API that is made using **node.js** and deployed
 ### User Model
 1. Creating New User
 2. Logging in with existing User
-3. Logging out with logged in user (individual device and all devices)
+3. Logging out user (individual device and all devices)
 4. Fetching details of logged in user
 5. Updating details of logged in user
 6. Deleting profile of logged in user
