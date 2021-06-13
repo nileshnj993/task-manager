@@ -19,8 +19,9 @@ This is a basic **Task Manager** API that is made using **node.js** and deployed
 
 **The API can be accessed at [Task Manager API](https://task-manager-nj.herokuapp.com) and the HTTP requests can be made using [Postman](https://www.postman.com/)**
 
+
 ## **Additional Functionality Provided**
-1. Mail sent to newly registered users
+1. Mail sent to newly registered users and users who delete their accounts
 2. Authorized access to personal tasks
 3. Encrypted storing of passwords
 4. Ability to add profile picture for your user
