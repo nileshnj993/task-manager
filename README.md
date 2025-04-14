@@ -17,7 +17,7 @@ This is a basic **Task Manager** API that is made using **Node.js** and deployed
 2. Fetching all tasks of logged in user
 3. Updating and deleting tasks of logged in user
 
-**The API can be accessed at [Task Manager API](https://task-manager-nj.herokuapp.com) and the HTTP requests can be made using [Postman](https://www.postman.com/)**
+The app was deployed on Heroku. It has now been taken down to avoid extra costs.
 
 
 ## **Additional Functionality Provided**
